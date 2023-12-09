@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { removeDevice, removeData } from "store/devicesActions";
@@ -12,18 +12,50 @@ import AiReport from "atoms/AiReport";
 const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
   const [options, setOptions] = useState(false);
 
-  const currentDate = new Date();
-  const currentTime = currentDate.getTime();
-
-  const workMinutes =
+  const [workSeconds, setWorkSeconds] = useState(
     controller &&
-    Math.floor((currentTime - controller.StartWork) / (1000 * 60));
-  const breakMinutes =
+      Math.floor((new Date().getTime() - controller.StartWork) / 1000)
+  );
+  const [breakSeconds, setBreakSeconds] = useState(
     controller &&
-    Math.floor((currentTime - controller.StartBreak) / (1000 * 60));
+      Math.floor((new Date().getTime() - controller.StartBreak) / 1000)
+  );
 
-  const workPercents = Math.floor((workMinutes / 60) * 100);
-  const breakPercents = Math.floor((breakMinutes / 10) * 100);
+  const [workSecondsPercents, setWorkSecondsPercents] = useState(
+    Math.floor((workSeconds / 60) * 100) <= 100
+      ? Math.floor((workSeconds / 60) * 100)
+      : 100
+  );
+  const [breakSecondsPercents, setBreakSecondsPercents] = useState(
+    Math.floor((breakSeconds / 10) * 100) <= 100
+      ? Math.floor((breakSeconds / 10) * 100)
+      : 100
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWorkSeconds(
+        controller &&
+          Math.floor((new Date().getTime() - controller.StartWork) / 1000)
+      );
+      setBreakSeconds(
+        controller &&
+          Math.floor((new Date().getTime() - controller.StartBreak) / 1000)
+      );
+      setWorkSecondsPercents(
+        Math.floor((workSeconds / 60) * 100) <= 100
+          ? Math.floor((workSeconds / 60) * 100)
+          : 100
+      );
+      setBreakSecondsPercents(
+        Math.floor((breakSeconds / 10) * 100) <= 100
+          ? Math.floor((breakSeconds / 10) * 100)
+          : 100
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [controller]);
 
   const ifWork = controller && controller.StartWork > controller.StartBreak;
 
@@ -85,25 +117,25 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
             {ifWork ? (
               <>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
-                  Work Time: {workMinutes} minutes
+                  Work Time: {workSeconds} minutes
                 </Typography>
                 <LinearProgress
                   color="primary"
                   sx={{ mt: 2, height: 15, borderRadius: 15 }}
                   variant="determinate"
-                  value={workPercents ?? 0}
+                  value={workSecondsPercents ?? 0}
                 />
               </>
             ) : (
               <>
                 <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
-                  Break Time: {breakMinutes} minutes
+                  Break Time: {breakSeconds} minutes
                 </Typography>
                 <LinearProgress
                   color="success"
                   sx={{ mt: 2, height: 15, borderRadius: 15 }}
                   variant="determinate"
-                  value={breakPercents ?? 0}
+                  value={breakSecondsPercents ?? 0}
                 />
               </>
             )}
@@ -123,17 +155,18 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
             <Box sx={{ my: 2, display: "flex" }}>
               <Card variant="outlined" sx={{ p: 1, mr: 1, width: "100%" }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Actually Temperature: {controller.Temperature ?? 0}°C
+                  Actually Temperature: {controller.Temperature.toFixed(2) ?? 0}
+                  °C
                 </Typography>
               </Card>
               <Card variant="outlined" sx={{ p: 1, mr: 1, width: "100%" }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Actually Humidity: {controller.Humidity ?? 0}%
+                  Actually Humidity: {controller.Humidity.toFixed(2) ?? 0}%
                 </Typography>
               </Card>
               <Card variant="outlined" sx={{ p: 1, width: "100%" }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Actually Brightness: {controller.Brightness ?? 0}%
+                  Actually Brightness: {controller.Brightness.toFixed(2) ?? 0}%
                 </Typography>
               </Card>
             </Box>
