@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Typography, Box, Button } from "@mui/material";
 
-const DeviceChart = ({ temperature, humidity, brightness, startBreak }) => {
+const DeviceChart = ({ temperature, humidity, brightness }) => {
   const apiUrl =
     "https://api.openai.com/v1/engines/text-davinci-003/completions";
-  const apiKey = "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";
+  const apiKey = "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";
 
   const requestData = {
     prompt: `Based on the temperature of ${temperature}°C, humidity of ${humidity}%, and light level of ${brightness}%,generate short report, 180 chars long max about working environment space from given data and output report about how good or how bad is this environment and what should be improved to work better.`,
