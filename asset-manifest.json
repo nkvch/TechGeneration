@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/TechGeneration/static/css/main.253b4334.css",
+    "main.js": "/TechGeneration/static/js/main.0b57a493.js",
+    "service-worker.js": "/TechGeneration/service-worker.js",
+    "index.html": "/TechGeneration/index.html",
+    "main.253b4334.css.map": "/TechGeneration/static/css/main.253b4334.css.map",
+    "main.0b57a493.js.map": "/TechGeneration/static/js/main.0b57a493.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.253b4334.css",
+    "static/js/main.0b57a493.js"
+  ]
+}
