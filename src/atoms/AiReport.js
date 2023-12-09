@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Typography, Box, Button } from "@mui/material";
 
 const DeviceChart = ({ temperature, humidity, brightness, startBreak }) => {
   const apiUrl =
     "https://api.openai.com/v1/engines/text-davinci-003/completions";
-  const apiKey = "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";
+  const apiKey = "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";
 
   const requestData = {
     prompt: `Based on the temperature of ${temperature}°C, humidity of ${humidity}%, and light level of ${brightness}%,generate short report, 180 chars long max about working environment space from given data and output report about how good or how bad is this environment and what should be improved to work better.`,
@@ -14,8 +14,8 @@ const DeviceChart = ({ temperature, humidity, brightness, startBreak }) => {
 
   const [report, setReport] = useState("");
 
-  useEffect(() => {
-    fetch(apiUrl, {
+  const generateReport = async () => {
+    await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,15 +31,20 @@ const DeviceChart = ({ temperature, humidity, brightness, startBreak }) => {
       .catch((error) => {
         console.log(error);
       });
-  }, [startBreak]);
+  };
 
   return (
-    <Typography variant="subtitle1" sx={{ my: 2 }}>
-      <Box as="span" sx={{ fontWeight: 600 }}>
-        AI Report:
-      </Box>{" "}
-      {report}
-    </Typography>
+    <Box>
+      <Typography variant="subtitle1" sx={{ mt: 2, fontWeight: 600 }}>
+        AI Report
+      </Typography>
+      <Button size="small" onClick={generateReport} variant="outlined">
+        Generate
+      </Button>
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        {report}
+      </Typography>
+    </Box>
   );
 };
 
