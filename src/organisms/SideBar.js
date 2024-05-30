@@ -18,7 +18,7 @@ const SideBar = ({ signoutUser, auth, ...props }) => {
           <Typography variant="h5">Productivity Manager</Typography>
         </ListItem>
         <ListItem
-          sx={{ textTransform: "uppercase" }}
+          sx={{ textTransform: "uppercase", borderRadius: "50px" }}
           selected={location.pathname === "/board"}
           onClick={() => navigate("/board")}
           button
@@ -34,7 +34,7 @@ const SideBar = ({ signoutUser, auth, ...props }) => {
       </List>
       <List>
         <ListItem
-          sx={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
+          sx={{ textTransform: "uppercase", whiteSpace: "nowrap", borderRadius: "50px" }}
           onClick={signoutUser}
           button
         >

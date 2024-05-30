@@ -29,7 +29,7 @@ const BoardView = ({ devices }) => {
             <Menu />
           </IconButton>
           <Typography variant="h6">
-            Data: {format(new Date(), "do MMMM Y")}
+            Date: {format(new Date(), "do MMMM Y")}
           </Typography>
         </Box>
       }

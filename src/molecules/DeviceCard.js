@@ -3,14 +3,25 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { removeDevice, removeData } from "store/devicesActions";
 import { firebaseConnect } from "react-redux-firebase";
-import { Typography, LinearProgress, Avatar, Button } from "@mui/material";
-import { Box, Card, CardHeader, CardContent, IconButton } from "@mui/material";
-import { ViewInAr, MoreVert } from "@mui/icons-material";
+import { Typography, LinearProgress, Avatar, IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
+import { Box, Card, CardHeader, CardContent } from "@mui/material";
+import { ViewInAr, MoreVert, Delete, Refresh } from "@mui/icons-material";
 import DeviceChart from "atoms/DeviceChart";
 import AiReport from "atoms/AiReport";
 
 const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
   const [options, setOptions] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOptionsClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOptions(!options);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOptions(false);
+  };
 
   const [workSeconds, setWorkSeconds] = useState(
     controller &&
@@ -60,54 +71,51 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
   const ifWork = controller && controller.StartWork > controller.StartBreak;
 
   return (
-    <Card sx={{ borderRadius: 2 }} variant="outlined">
+    <Card sx={{ borderRadius: 2, boxShadow: 3 }} variant="outlined">
       <CardHeader
         title={
           <>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "primary.main" }}>
               Cube: {device.name}
             </Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "text.secondary" }}>
               Description: {device.description}
             </Typography>
           </>
         }
         subheader={
-          <Typography sx={{ fontWeight: 600 }}>Key: {device.key}</Typography>
+          <Typography sx={{ fontWeight: 600, color: "text.secondary" }}>Key: {device.key}</Typography>
         }
         avatar={
-          <Avatar>
+          <Avatar sx={{ bgcolor: "primary.main" }}>
             <ViewInAr />
           </Avatar>
         }
         action={
           <>
-            {options && (
-              <>
-                <Button
-                  sx={{ ml: 1 }}
-                  onClick={() => {
-                    removeDevice(device.id);
-                  }}
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                >
-                  Delete
-                </Button>
-                <Button
-                  sx={{ ml: 1 }}
-                  onClick={() => removeData(device.key)}
-                  variant="outlined"
-                  size="small"
-                >
-                  Reset
-                </Button>
-              </>
-            )}
-            <IconButton onClick={() => setOptions(!options)} size="samll">
-              <MoreVert />
-            </IconButton>
+            <Tooltip title="Options">
+              <IconButton onClick={handleOptionsClick} size="small">
+                <MoreVert />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              open={options}
+              onClose={handleClose}
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <MenuItem onClick={() => removeDevice(device.id)}>
+                <Tooltip title="Delete Device">
+                  <Delete color="error" />
+                </Tooltip>
+              </MenuItem>
+              <MenuItem onClick={() => removeData(device.key)}>
+                <Tooltip title="Reset Data">
+                  <Refresh />
+                </Tooltip>
+              </MenuItem>
+            </Menu>
           </>
         }
       />
@@ -116,7 +124,7 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
           <>
             {ifWork ? (
               <>
-                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: "primary.main" }}>
                   Work Time: {workSeconds} minutes
                 </Typography>
                 <LinearProgress
@@ -128,7 +136,7 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
               </>
             ) : (
               <>
-                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: "success.main" }}>
                   Break Time: {breakSeconds} minutes
                 </Typography>
                 <LinearProgress
@@ -145,32 +153,32 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
               brightness={controller.Brightness}
               startBreak={controller.StartBreak}
             />
-            <Card variant="outlined" sx={{ width: "100%", py: 1 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mx: 1 }}>
+            <Card variant="outlined" sx={{ width: "100%", py: 1, mt: 2 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mx: 1, color: "text.secondary" }}>
                 Work Quality Level:{" "}
                 {controller.Levels ? Object.values(controller.Levels).pop() : 0}{" "}
                 \ 5
               </Typography>
             </Card>
-            <Box sx={{ my: 2, display: "flex" }}>
-              <Card variant="outlined" sx={{ p: 1, mr: 1, width: "100%" }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Box sx={{ my: 2, display: "flex", gap: 1 }}>
+              <Card variant="outlined" sx={{ p: 1, width: "100%" }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "text.secondary" }}>
                   Actually Temperature: {controller.Temperature.toFixed(2) ?? 0}
                   °C
                 </Typography>
               </Card>
-              <Card variant="outlined" sx={{ p: 1, mr: 1, width: "100%" }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              <Card variant="outlined" sx={{ p: 1, width: "100%" }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "text.secondary" }}>
                   Actually Humidity: {controller.Humidity.toFixed(2) ?? 0}%
                 </Typography>
               </Card>
               <Card variant="outlined" sx={{ p: 1, width: "100%" }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "text.secondary" }}>
                   Actually Brightness: {controller.Brightness.toFixed(2) ?? 0}%
                 </Typography>
               </Card>
             </Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "text.secondary" }}>
               Work quality in hours:
             </Typography>
             <DeviceChart levels={controller.Levels} />
@@ -181,10 +189,14 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
   );
 };
 
-const mapStateToProps = (state, props) => ({
-  controller: state.firebase.data[props.device.key],
-});
-
+const mapStateToProps = (state, props) => {
+  console.log(state.firebase.data);
+  const controller = state.firebase.data[props.device.key];
+  console.log(controller);
+  return {
+    controller,
+  };
+};
 const mapDispatchToProps = (dispatch) => ({
   removeDevice: (id) => dispatch(removeDevice(id)),
   removeData: (key) => dispatch(removeData(key)),
