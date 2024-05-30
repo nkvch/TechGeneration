@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/TechGeneration/static/css/main.253b4334.css",
-    "main.js": "/TechGeneration/static/js/main.5512c4b3.js",
+    "main.js": "/TechGeneration/static/js/main.49b571a6.js",
     "service-worker.js": "/TechGeneration/service-worker.js",
     "index.html": "/TechGeneration/index.html",
     "main.253b4334.css.map": "/TechGeneration/static/css/main.253b4334.css.map",
-    "main.5512c4b3.js.map": "/TechGeneration/static/js/main.5512c4b3.js.map"
+    "main.49b571a6.js.map": "/TechGeneration/static/js/main.49b571a6.js.map"
   },
   "entrypoints": [
     "static/css/main.253b4334.css",
-    "static/js/main.5512c4b3.js"
+    "static/js/main.49b571a6.js"
   ]
 }
