@@ -6,13 +6,13 @@ import "firebase/compat/auth";
 import "firebase/compat/storage";
 
 firebase.initializeApp({
-  apiKey: "AIzaSyBCzdZIBsALtlbRN_Jjb6w-qzqvWUvfIzE",
-  authDomain: "hackatoniot-tech.firebaseapp.com",
-  databaseURL: "https://hackatoniot-tech-default-rtdb.firebaseio.com",
-  projectId: "hackatoniot-tech",
-  storageBucket: "hackatoniot-tech.appspot.com",
-  messagingSenderId: "1024177713911",
-  appId: "1:1024177713911:web:046997b4c9d9b562de59f2",
+  apiKey: "AIzaSyBk4cJ4xKXQPKGoPaCH_iAee_sT_hDJyws",
+  authDomain: "air-wut.firebaseapp.com",
+  databaseURL: "https://air-wut-default-rtdb.firebaseio.com/",
+  projectId: "air-wut",
+  storageBucket: "air-wut.appspot.com",
+  messagingSenderId: "932136813553",
+  appId: "1:932136813553:web:e90ca94db1c088f0c6fa50"
 });
 
 firebase.analytics();
