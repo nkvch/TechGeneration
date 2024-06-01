@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { removeDevice, removeData } from "store/devicesActions";
@@ -32,16 +32,17 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
       Math.floor((new Date().getTime() - controller.StartBreak) / 1000)
   );
 
-  const [workSecondsPercents, setWorkSecondsPercents] = useState(
-    Math.floor((workSeconds / 60) * 100) <= 100
-      ? Math.floor((workSeconds / 60) * 100)
+  const workSecondsPercents = useMemo(() => {
+    return Math.floor((workSeconds / 30) * 100) <= 100
+      ? Math.floor((workSeconds / 30) * 100)
       : 100
-  );
-  const [breakSecondsPercents, setBreakSecondsPercents] = useState(
-    Math.floor((breakSeconds / 10) * 100) <= 100
+  }, [workSeconds]);
+
+  const breakSecondsPercents = useMemo(() => {
+    return Math.floor((breakSeconds / 10) * 100) <= 100
       ? Math.floor((breakSeconds / 10) * 100)
-      : 100
-  );
+      : 100;
+  }, [breakSeconds]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,22 +54,14 @@ const DeviceCard = ({ removeDevice, removeData, device, controller }) => {
         controller &&
           Math.floor((new Date().getTime() - controller.StartBreak) / 1000)
       );
-      setWorkSecondsPercents(
-        Math.floor((workSeconds / 60) * 100) <= 100
-          ? Math.floor((workSeconds / 60) * 100)
-          : 100
-      );
-      setBreakSecondsPercents(
-        Math.floor((breakSeconds / 10) * 100) <= 100
-          ? Math.floor((breakSeconds / 10) * 100)
-          : 100
-      );
     }, 1000);
 
     return () => clearInterval(interval);
   }, [controller]);
 
   const ifWork = controller && controller.StartWork > controller.StartBreak;
+
+  console.log('%persents', workSecondsPercents, breakSecondsPercents);
 
   return (
     <Card sx={{ borderRadius: 2, boxShadow: 3 }} variant="outlined">
